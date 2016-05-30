@@ -1,5 +1,3 @@
-require 'byebug'
-
 class BinaryMinHeap
   def initialize(&prc)
     @store = []
@@ -78,7 +76,3 @@ class BinaryMinHeap
     heapify_up(array, parent_index(child_idx),len, &prc)
   end
 end
-
-=begin
-[0, 1, 2, 3, 4, 5, 6, 7, 8]
-=end
