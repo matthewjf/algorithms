@@ -21,6 +21,7 @@ class BSTNode
 end
 
 class BinarySearchTree
+  attr_reader :root
   def initialize
     @root = nil
   end
@@ -59,6 +60,10 @@ class BinarySearchTree
 
   def delete(value)
     self.class.delete!(@root, value)
+  end
+
+  def display
+    self.class.display(@root)
   end
 
   def self.insert!(node, value)
@@ -136,18 +141,69 @@ class BinarySearchTree
 
   def self.delete!(node, value)
     return nil if node.nil?
-
-    if value == node.value
-      return nil if node.children.nil?
-      return node.children.first if node.children.length == 1
-    end
-
     if value < node.value
       node.left = self.delete!(node.left, value)
-    else
+    elsif value > node.value
       node.right = self.delete!(node.right, value)
+    else
+      return nil if node.children.nil?
+      return node.children.first if node.children.length == 1
+      
+      # hibbard deletion: replace with successor and delete that node
+      t = node
+      node = self.min(t.right)
+      node.right = self.delete_min!(t.right)
+      node.left = t.left
     end
 
-    return node
+    node
+  end
+
+  def self.display(node)
+    h = self.height!(node)
+    char_count = (2 ** (h + 1) - 1)
+
+    # display first level
+    s = " " * char_count
+    s[s.length / 2] = node.value.to_s
+    puts s
+
+    # display following levels
+    depth = 1
+    parents = [node]
+
+    until depth > h
+      level = []
+      spaces = " " * (char_count / (2 ** (depth + 1)))
+      parents.each do |node|
+        if node
+          left = display_node(node.left)
+          right = display_node(node.right)
+        else
+          left = " "
+          right = " "
+        end
+
+        level.push(spaces + left + spaces)
+        level.push(spaces + right + spaces)
+      end
+
+      puts level.join(" ")
+
+      parents = parents.map do |node|
+        if node
+          [node.left, node.right]
+        else
+          [nil, nil]
+        end
+      end.flatten
+
+      depth += 1
+    end
+  end
+
+  def self.display_node(node)
+    return " " unless node
+    node.value.to_s
   end
 end
