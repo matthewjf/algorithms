@@ -1,0 +1,8 @@
+- browser checks cache
+- browser asks OS for server's IP
+- OS makes a DNS lookup and sends IP to browser
+- browser opens TCP connection to server
+- browser sends HTTP request through TCP connection
+- browser receives HTTP response
+- browser caches response if cacheable
+- browser checks the response type and takes an action
